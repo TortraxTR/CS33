@@ -19,7 +19,7 @@ B)
 */
 Int xbyte(packed_t word, int bytenum) 
 {
-	Return ((int)word << (3 – bytenum) << 3) >> 24; 
+	return ((int)word << (3 – bytenum) << 3) >> 24; 
 }
 
 2.82
