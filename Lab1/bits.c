@@ -151,13 +151,25 @@ int bitParity(int x) {
 /*
  * rotateRight - Rotate x to the right by n
  *   Can assume that 0 <= n <= 31
- *   Examples: rotateRight(0x87654321,4) = 0x76543218
- *   Legal ops: ~ & ^ | + << >> !
+ *   Examples: rotateRight(0x87654321,4) = 0x18765432
+ *   Legal ops: ~ & ^ | + << >>
  *   Max ops: 25
  *   Rating: 3	
+ 10000111011001010100001100100001
+ 11111000011101100101010000110010
+ 00011000011101100101010000110010
  */
 int rotateRight(int x, int n) {
-	return 2;
+	int lowerMask = (1 << n) + ~1 + 1; //(1 << n) - 1 creates a mask of n 1's; using the rule -1 = ~1 + 1
+	int nBits = x & lowerMask;		  //extracts the least significant n bits of x
+	int result = x >> n;					   //shifts right by n
+	int upperMask = (1 << 31) >> (n + ~1 + 1); //creates a mask for most significant n bits (like 11110000...0)
+	upperMask = ~upperMask;					   //flips so upperMask is 00001111...1
+	result = result & upperMask;			   //frees up the most significant n bits of x
+	nBits = nBits << (33 + ~n);				   //prepare to set the first n bits of x  
+	result = nBits | result;
+	int nonzero = ((!(!n)) << 31) >> 31;		//checks if n = 0
+	return (nonzero & result) | (~nonzero & x);
 }
 /*
  * byteSwap - swaps the nth byte and the mth byte
@@ -238,7 +250,7 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
-	return ~x + 1;
+	return ~x + 1; //-x = ~x + 1
 }
 /*
  * isTmax - returns 1 if x is the maximum, two's complement number,
@@ -249,11 +261,13 @@ int negate(int x) {
  */
 int isTmax(int x) {
 	/* 
-	
+	if x = Tmax, num becomes Tmin, then x becomes Umax
+	x (now Umax)'s complement is 00...0 and num is set to 00...0 
+	returns 0x01 (true) if both num and x are 0x00
 	*/
-	int num = x + 1; //if x is Tmax, num is now -1
-	x += num; //if x is Tmax, x is now 
-	x = ~x;	
-	x += !num;
-	return !x;
+	int num = x + 1;	//if x = Tmax, in bits: Tmax + 1 = Tmin
+	x += num;			//Umax = 2 * Tmax + 1
+	x = ~x;				//Umax (11...1) becomes 0 (00...0)
+	num = !num;			//Tmin (11...1) becomes 0 (00...0)
+	return !(x | num);	//only returns 1 if both conditions are false 
 }
