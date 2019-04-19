@@ -1,3 +1,4 @@
+
 /*
  * CS:APP Data Lab
  *
@@ -154,7 +155,7 @@ int bitParity(int x) {
  *   Examples: rotateRight(0x87654321,4) = 0x18765432
  *   Legal ops: ~ & ^ | + << >>
  *   Max ops: 25
- *   Rating: 3	
+ *   Rating: 3
  10000111011001010100001100100001
  11111000011101100101010000110010
  00011000011101100101010000110010
@@ -181,8 +182,17 @@ int rotateRight(int x, int n) {
  *  Rating: 2
  */
 int byteSwap(int x, int n, int m) {
-	return 2;
+	int a = n << 3; //get the 8 bits of the nth byte
+	int b = m << 3; //get the 8 bits of the mth byte
+	int mask = (0xFF << a) | (0xFF << b); //creates a mask where 000...1...000...1...000
+																	 //^ nth     ^ mth 
+	int nByte = 0xFF & (x >> a); //extracts the nth byte
+	int mByte = 0xFF & (x >> b); //extracts the mth byte
+	int result = (~mask & x) | (nByte << b) | (mByte << a);	//first sets nth and mth bytes to 0
+															//then sets x's nth byte to mByte and mth byte to nByte
+	return result;
 }
+
 /*
  * fitsShort - return 1 if x can be represented as a
  *   16-bit, two's complement integer.
@@ -236,7 +246,7 @@ int isGreater(int x, int y) {
  */
 int fitsBits(int x, int n) {
 	/*
-	fills remaining upper bits with the most significant bit of x 
+	fills remaining upper bits with the most significant bit of x
 	checks if new bit sequence is still equal to x
 	*/
 	int upper = ~n + 33;
@@ -260,9 +270,9 @@ int negate(int x) {
  *   Rating: 1
  */
 int isTmax(int x) {
-	/* 
+	/*
 	if x = Tmax, num becomes Tmin, then x becomes Umax
-	x (now Umax)'s complement is 00...0 and num is set to 00...0 
+	x (now Umax)'s complement is 00...0 and num is set to 00...0
 	returns 0x01 (true) if both num and x are 0x00
 	*/
 	int num = x + 1;	//if x = Tmax, in bits: Tmax + 1 = Tmin
@@ -271,3 +281,5 @@ int isTmax(int x) {
 	num = !num;			//Tmin (11...1) becomes 0 (00...0)
 	return !(x | num);	//only returns 1 if both conditions are false 
 }
+
+
