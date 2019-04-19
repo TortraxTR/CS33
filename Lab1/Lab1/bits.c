@@ -141,6 +141,10 @@ this file the authoritative source.
   */
 
 int bitParity(int x) {
+	/*
+	use XOR to mask the upper 16 bits, then the next 8 bits, then the next 4 bits, and so on
+	use AND to extract the lowest (least significant) bit to determine if there is an odd number of 0's
+	*/
 	int parity = x ^ (x >> 16);
 	parity ^= parity >> 8;
 	parity ^= parity >> 4;
@@ -161,6 +165,11 @@ int bitParity(int x) {
  00011000011101100101010000110010
  */
 int rotateRight(int x, int n) {
+	/*
+	extracts the lower n bits using AND mask
+	right shift x by n, use AND to set the upper n bits of x to be 0
+	use OR to set the upper n bits to the lower n bits
+	*/
 	int lowerMask = (1 << n) + ~1 + 1; //(1 << n) - 1 creates a mask of n 1's; using the rule -1 = ~1 + 1
 	int nBits = x & lowerMask;		  //extracts the least significant n bits of x
 	int result = x >> n;					   //shifts right by n
@@ -182,6 +191,10 @@ int rotateRight(int x, int n) {
  *  Rating: 2
  */
 int byteSwap(int x, int n, int m) {
+	/*
+	gets the 8 bits of the nth and mth byte, then use AND to mask x so the nth and mth bytes are 0's
+	use OR to set x's nth byte and mth byte
+	*/
 	int a = n << 3; //get the 8 bits of the nth byte
 	int b = m << 3; //get the 8 bits of the mth byte
 	int mask = (0xFF << a) | (0xFF << b); //creates a mask where 000...1...000...1...000
@@ -202,7 +215,14 @@ int byteSwap(int x, int n, int m) {
  *   Rating: 1
  */
 int fitsShort(int x) {
-	return 2;
+	/*
+	right shifts by 15, then check of all the bits are bits are the same (0's if x > 0, 1's if x < 0)
+	if x does not fit in 16 bits, not all the remaining bits will be the same
+	*/
+	x = x >> 15; 
+	return !(x ^ 0) + !(x ^ ~0);	//if x fits and x<0, x^0 == 1, x^~0 == 0, so !1+!0 == 1
+									//if x fits and x>0, x^0 == 0, x^~0 == 1, so !0+!1 == 1
+									//if x does not fit, x^0 == 1, x^~0 == 1, so !1+!1 == 0
 }
 /*
  * bitAnd - x&y using only ~ and |
@@ -212,7 +232,10 @@ int fitsShort(int x) {
  *   Rating: 1
  */
 int bitAnd(int x, int y) {
-	return 2;
+	/*
+	uses De Morgan's Law: !(x && y) == !x || !y, so !!(x && y) == !(!x || !y)
+	*/
+	return ~(~x | ~y);
 }
 /*
  * subOK - Determine if can compute x-y without overflow
@@ -260,6 +283,9 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
+	/*
+	uses -x = ~x + 1 to calculate the result
+	*/
 	return ~x + 1; //-x = ~x + 1
 }
 /*

@@ -5,13 +5,6 @@
 #include <cassert>
 using namespace std;
 
-void testByteSwap() {
-	assert(byteSwap(0x12345678, 1, 3) == 0x56341278);
-	assert(byteSwap(0xDEADBEEF, 0, 2) == 0xDEEFBEAD);
-	cout << "Passed all tests for [byteSwap]" << endl;
-	cout << endl;
-}
-
 void testBitParity() {
 	assert(bitParity(5) == 0);
 	assert(bitParity(7) == 1);
@@ -24,6 +17,27 @@ void testRotateRight() {
 	assert(rotateRight(0x87654321, 4) == 0x18765432);
 	assert(rotateRight(0x87654321, 0) == 0x87654321);
 	cout << "Passed all tests for [rotateRight]" << endl;
+	cout << endl;
+}
+
+void testByteSwap() {
+	assert(byteSwap(0x12345678, 1, 3) == 0x56341278);
+	assert(byteSwap(0xDEADBEEF, 0, 2) == 0xDEEFBEAD);
+	cout << "Passed all tests for [byteSwap]" << endl;
+	cout << endl;
+}
+
+void testFitsShort() {
+	assert(fitsShort(33000) == 0);
+	assert(fitsShort(-32768) == 1);
+	cout << "Passed all tests for [fitsShort]" << endl;
+	cout << endl;
+}
+
+void testBitAnd() {
+	assert(bitAnd(6, 5) == 4);
+	assert(bitAnd(3, 4) == 0);
+	cout << "Passed all tests for [bitAnd]" << endl;
 	cout << endl;
 }
 
@@ -66,9 +80,11 @@ void testIsTmax() {
 }
 
 int main() {
-	testByteSwap();
 	testBitParity();
 	testRotateRight();
+	testByteSwap();
+	testFitsShort();
+	testBitAnd();
 	testFitsBits();
 	testNegate();
 	testIsTmax();
