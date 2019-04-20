@@ -145,7 +145,8 @@ int bitParity(int x) {
 	use XOR to mask the upper 16 bits, then the next 8 bits, then the next 4 bits, and so on
 	use AND to extract the lowest (least significant) bit to determine if there is an odd number of 0's
 	*/
-	int parity = x ^ (x >> 16);
+	int parity;
+	parity = x ^ (x >> 16);
 	parity ^= parity >> 8;
 	parity ^= parity >> 4;
 	parity ^= parity >> 2;
@@ -160,9 +161,6 @@ int bitParity(int x) {
  *   Legal ops: ~ & ^ | + << >>
  *   Max ops: 25
  *   Rating: 3
- 10000111011001010100001100100001
- 11111000011101100101010000110010
- 00011000011101100101010000110010
  */
 int rotateRight(int x, int n) {
 	/*
@@ -170,15 +168,16 @@ int rotateRight(int x, int n) {
 	right shift x by n, use AND to set the upper n bits of x to be 0
 	use OR to set the upper n bits to the lower n bits
 	*/
-	int lowerMask = (1 << n) + ~1 + 1; //(1 << n) - 1 creates a mask of n 1's; using the rule -1 = ~1 + 1
-	int nBits = x & lowerMask;		  //extracts the least significant n bits of x
-	int result = x >> n;					   //shifts right by n
-	int upperMask = (1 << 31) >> (n + ~1 + 1); //creates a mask for most significant n bits (like 11110000...0)
+	int lowerMask, nBits, result, upperMask, nonzero;
+	lowerMask = (1 << n) + ~1 + 1; //(1 << n) - 1 creates a mask of n 1's; using the rule -1 = ~1 + 1
+	nBits = x & lowerMask;		  //extracts the least significant n bits of x
+	result = x >> n;					   //shifts right by n
+	upperMask = (1 << 31) >> (n + ~1 + 1); //creates a mask for most significant n bits (like 11110000...0)
 	upperMask = ~upperMask;					   //flips so upperMask is 00001111...1
 	result = result & upperMask;			   //frees up the most significant n bits of x
 	nBits = nBits << (33 + ~n);				   //prepare to set the first n bits of x  
 	result = nBits | result;
-	int nonzero = ((!(!n)) << 31) >> 31;		//checks if n = 0
+	nonzero = ((!(!n)) << 31) >> 31;		//checks if n = 0
 	return (nonzero & result) | (~nonzero & x);
 }
 /*
@@ -195,14 +194,15 @@ int byteSwap(int x, int n, int m) {
 	gets the 8 bits of the nth and mth byte, then use AND to mask x so the nth and mth bytes are 0's
 	use OR to set x's nth byte and mth byte
 	*/
-	int a = n << 3; //get the 8 bits of the nth byte
-	int b = m << 3; //get the 8 bits of the mth byte
-	int mask = (0xFF << a) | (0xFF << b); //creates a mask where 000...1...000...1...000
-																	 //^ nth     ^ mth 
-	int nByte = 0xFF & (x >> a); //extracts the nth byte
-	int mByte = 0xFF & (x >> b); //extracts the mth byte
-	int result = (~mask & x) | (nByte << b) | (mByte << a);	//first sets nth and mth bytes to 0
-															//then sets x's nth byte to mByte and mth byte to nByte
+	int a, b, mask, nByte, mByte, result;
+	a = n << 3; //get the 8 bits of the nth byte
+	b = m << 3; //get the 8 bits of the mth byte
+	mask = (0xFF << a) | (0xFF << b); //creates a mask where 000...1...000...1...000
+																 //^ nth     ^ mth 
+	nByte = 0xFF & (x >> a); //extracts the nth byte
+	mByte = 0xFF & (x >> b); //extracts the mth byte
+	result = (~mask & x) | (nByte << b) | (mByte << a);	//first sets nth and mth bytes to 0
+														//then sets x's nth byte to mByte and mth byte to nByte
 	return result;
 }
 
@@ -246,7 +246,20 @@ int bitAnd(int x, int y) {
  *   Rating: 3
  */
 int subOK(int x, int y) {
-	return 2;
+	/*
+	extract the signs of x and y, then determine if their difference has the same sign as y
+	 x > 0, y > 0, no overflow
+     x < 0, y < 0, no overflow 
+     x > 0, y < 0, overflow if difference < 0
+     x < 0, y > 0, overflow if difference > 0
+	*/
+	int xSign, ySign, diffSign, sub, subSign;
+	xSign = (x >> 31) & 0x1; //extracts the sign of x
+	ySign = (y >> 31) & 0x1; //extracts the sign of y
+	diffSign = xSign ^ ySign; //diffSign == 0 if x and y have same signs
+	sub = x + ~y + 1; //calculates the result of subraction using -y = ~y + 1
+	subSign = (sub >> 31) & 0x1; //extracts the sign of the result
+	return !((subSign ^ xSign) & diffSign); //subSign^xSign == 0 if sub and x have same signs
 }
 /*
  * isGreater - if x > y  then return 1, else return 0
@@ -256,7 +269,17 @@ int subOK(int x, int y) {
  *   Rating: 3
  */
 int isGreater(int x, int y) {
-	return 2;
+	/*
+	extract the signs of x and y, then determine if their difference is positive or negative
+	*/
+	int xSign, ySign, diffSign, subSign, same, notSame;
+	xSign = (x >> 31) & 0x1; //extracts the sign of x
+	ySign = (y >> 31) & 0x1; //extracts the sign of y
+	diffSign = xSign ^ ySign; //diffSign == 0 if x and y have same signs
+	subSign = ((x + ~y) >> 31) & 0x1; //subSign == 0 if x - y - 1 >= 0 
+	same = (!diffSign) & subSign; //if x and y have same signs, !diffSign & subSign == 0
+	notSame = xSign & !ySign; //if x and y have different signs, xSign & !ySign == 0 for x to be greater than y
+	return !(same | notSame); 
 }
 /*
  * fitsBits - return 1 if x can be represented as an
@@ -272,7 +295,8 @@ int fitsBits(int x, int n) {
 	fills remaining upper bits with the most significant bit of x
 	checks if new bit sequence is still equal to x
 	*/
-	int upper = ~n + 33;
+	int upper;
+	upper = ~n + 33;
 	return !(((x << upper) >> upper) ^ x);
 }
 /*
@@ -301,7 +325,8 @@ int isTmax(int x) {
 	x (now Umax)'s complement is 00...0 and num is set to 00...0
 	returns 0x01 (true) if both num and x are 0x00
 	*/
-	int num = x + 1;	//if x = Tmax, in bits: Tmax + 1 = Tmin
+	int num;
+	num = x + 1;	//if x = Tmax, in bits: Tmax + 1 = Tmin
 	x += num;			//Umax = 2 * Tmax + 1
 	x = ~x;				//Umax (11...1) becomes 0 (00...0)
 	num = !num;			//Tmin (11...1) becomes 0 (00...0)

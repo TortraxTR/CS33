@@ -41,6 +41,21 @@ void testBitAnd() {
 	cout << endl;
 }
 
+void testSubOK() {
+	assert(subOK(0x80000000, 0x80000000) == 1);
+	assert(subOK(0x80000000, 0x70000000) == 0);
+	cout << "Passed all tests for [subOK]" << endl;
+	cout << endl;
+}
+
+void testIsGreater() {
+	assert(isGreater(4, 5) == 0);
+	assert(isGreater(5, 4) == 1);
+	assert(isGreater(4, 4) == 0);
+	cout << "Passed all tests for [isGreater]" << endl;
+	cout << endl;
+}
+
 void testFitsBits() {
 	assert(fitsBits(5, 3) == 0);
 	assert(fitsBits(-4, 3) == 1);
@@ -85,6 +100,8 @@ int main() {
 	testByteSwap();
 	testFitsShort();
 	testBitAnd();
+	testSubOK();
+	testIsGreater();
 	testFitsBits();
 	testNegate();
 	testIsTmax();
