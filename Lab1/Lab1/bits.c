@@ -1,4 +1,3 @@
-
 /*
  * CS:APP Data Lab
  *
@@ -326,10 +325,10 @@ int isTmax(int x) {
 	returns 0x01 (true) if both num and x are 0x00
 	*/
 	int num;
-	num = x + 1;	//if x = Tmax, in bits: Tmax + 1 = Tmin
+	num = x + 1;		//if x = Tmax, in bits: Tmax + 1 = Tmin
 	x += num;			//Umax = 2 * Tmax + 1
 	x = ~x;				//Umax (11...1) becomes 0 (00...0)
-	num = !num;			//Tmin (11...1) becomes 0 (00...0)
+	num = !num;			//Tmin (11...1) becomes 0 
 	return !(x | num);	//only returns 1 if both conditions are false 
 }
 

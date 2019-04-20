@@ -8,6 +8,10 @@ using namespace std;
 void testBitParity() {
 	assert(bitParity(5) == 0);
 	assert(bitParity(7) == 1);
+	assert(bitParity(0) == 0);
+	assert(bitParity(-1) == 0);
+	assert(bitParity(LONG_MAX) == 1);
+	assert(bitParity(LONG_MIN) == 1);
 	cout << "Passed all tests for [bitParity]" << endl;
 	cout << endl;
 }
@@ -16,6 +20,8 @@ void testBitParity() {
 void testRotateRight() {
 	assert(rotateRight(0x87654321, 4) == 0x18765432);
 	assert(rotateRight(0x87654321, 0) == 0x87654321);
+	assert(rotateRight(0b00000000000000000000000000000011, 2) == 0b11000000000000000000000000000000);
+	assert(rotateRight(0b00000000000000000000000000000011, 31) == 0b00000000000000000000000000000110);
 	cout << "Passed all tests for [rotateRight]" << endl;
 	cout << endl;
 }
@@ -23,6 +29,7 @@ void testRotateRight() {
 void testByteSwap() {
 	assert(byteSwap(0x12345678, 1, 3) == 0x56341278);
 	assert(byteSwap(0xDEADBEEF, 0, 2) == 0xDEEFBEAD);
+	assert(byteSwap(0x87654321, 0, 1) == 0x87652143);
 	cout << "Passed all tests for [byteSwap]" << endl;
 	cout << endl;
 }
@@ -30,6 +37,8 @@ void testByteSwap() {
 void testFitsShort() {
 	assert(fitsShort(33000) == 0);
 	assert(fitsShort(-32768) == 1);
+	assert(fitsShort(32767) == 1);
+	assert(fitsShort(32768) == 0);
 	cout << "Passed all tests for [fitsShort]" << endl;
 	cout << endl;
 }
@@ -37,6 +46,8 @@ void testFitsShort() {
 void testBitAnd() {
 	assert(bitAnd(6, 5) == 4);
 	assert(bitAnd(3, 4) == 0);
+	assert(bitAnd(5, 0) == 0);
+	assert(bitAnd(-1, -1) == -1);
 	cout << "Passed all tests for [bitAnd]" << endl;
 	cout << endl;
 }
