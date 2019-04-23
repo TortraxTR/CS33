@@ -1,0 +1,8 @@
+Esther Li
+604892225
+4/26/2019
+
+Homework 2
+
+"Wrong" is printed. Since row-major order places elements of the same row contiguously in memory, the value of magic8ball[3][4] corresponds to the content at address 
+0x7fffffffe0e0: 0x57 0x72 0x6f 0x6e 0x67 0x00 0x00 0x00 which prints “Wrong”.
