@@ -1,0 +1,26 @@
+if (first | second == 0)
+	explode;
+rbx = rsp; 		//rbx = first
+r12 = rbx + 16; 	//r12 = fifth
+rbp = rbx; 		//rbp = first
+eax = rbx + 4; 		//eax = second
+eax = rbx + eax;	//eax = first + second
+if ((rbx + 8) - eax == 0) //third == first + second 
+	eax = rbp + 8;	//eax = third 
+	rbx += 4; 	//rbx = second
+	if (rbx - r12 == 0)
+		done
+	else
+		rbp = rbx;	//rbp = second
+		eax = rbx + 4;	//eax = third
+		eax = rbx + eax; //eax = second + third
+		if ((rbx + 8) - eax == 0) //fourth = second + third
+			eax = rbp + 8; //THIS IS A LOOP!!!
+
+first, second cannot be 0
+third = first + second
+fourth = second + third
+fifth = third + fourth
+sixth = fourth + fifth
+
+	
