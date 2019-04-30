@@ -1,0 +1,33 @@
+*(rsp + 12) = 0;
+*(rsp + 8) = 0;
+rcx = rsp + 8; //rcx = 0
+rdx = rsp + 12; //rdx = 0
+esi = 0x25; //esi = 37
+eax = 0;
+scanf();
+if (eax <= 1) { 
+	explode
+}
+else {
+	eax = *(rsp + 8);
+	if (*(rsp + 12) != eax) {
+		edi = *(rsp + 12);
+		ebx = func_switch();
+		edi = *(rsp + 8);
+		func_switch();
+		if (ebx != eax) //answer is two numbers <= 7 that give equal results in switch
+			explode
+		else 
+			return
+	}
+	else
+		explode
+}
+
+func_switch() ****************
+if (edi	> 7) 
+	explode
+else
+	goto *(0x402a60 + 8 * rdi); 	//rdi == 1, *0x402a68 == 0x400f78 --> 0x15e
+					//rdi == 2, *0x402a70 == 0x400f7e --> 0x1c0 
+
