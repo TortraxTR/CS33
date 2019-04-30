@@ -31,3 +31,22 @@ else
 	goto *(0x402a60 + 8 * rdi); 	//rdi == 1, *0x402a68 == 0x400f78 --> 0x15e
 					//rdi == 2, *0x402a70 == 0x400f7e --> 0x1c0 
 
+input: 5 7
+ebx: 1 (first integer) ==> try 350
+edi: 5 (second integer) ==> must be less than 7, can't equal first int
+rsp + 0xc: 1 
+rsp + 0x8: 307
+eax: 137
+		during	after	during
+		f_s1	f_s1	f_s2
+
+ebx: 		1	137	137	0x89 	<== want this to be the same as eax
+edi: 		5	7	7
+eax: 		7	137	271	0x10f	<== want this to be the same as ebx
+rsp+0x8:	1	7	7
+rsp+0xc: 	0	5	5x
+
+both inputs have to be less than 8
+in the switch statement, 4 and 7 will return the same value (0x10f) to eax
+so the answer is: 4 7
+
