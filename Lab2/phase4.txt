@@ -1,0 +1,46 @@
+if (eax != 2) //must be 2 inputs 
+	explode
+if (rsp + 12 <= 14) //first input must be <= 14
+	edx = 14;
+	esi = 0;
+	edi = *(rsp + 12)
+	func4();
+	if (eax != 19)
+		explode
+	if (*(rsp + 8) == 19)
+		done
+else
+	explode
+
+func4************************
+eax = 14;
+eax = -14;
+ebx = -14;
+ebx = -14 >> 31;
+ebx = (-14 + (-14 >> 31)) >> 1; //65528
+ebx = esi + ebx; //65528
+if (ebx > edi)
+	edx = rbx - 1; 
+	func4();
+	eax = eax + ebx;
+	return;
+if (ebx < edi)
+	esi = rbx + 1;
+	func4();
+	eax = eax + ebx;
+	return;
+
+	
+edx	14	14	14	14	14	14	14	14	14	14	14
+eax	2	14	14	14	14	14	6	6	6	13	24 5+13-3=15
+ebx	1	14	0	14	7	14	7	11	11	24	24
+esi	0	0	0	0	0	8	8	8	12	12	12
+edi	13	13	13	13	13	13	13	13	13	13	13
+
+
+edx	14	12	
+eax	14	2
+ebx	7	13
+esi	8	12
+edi	12	12
+	
