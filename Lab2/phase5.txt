@@ -1,0 +1,39 @@
+eax = rsp + 0xc;
+eax = eax & 0xf; //preserve least significant 4 bits
+rsp + 0xc = eax;
+if (0xf == eax) //first input cannot be 15
+	explode
+ecx = 0;
+edx = 0;
+do {
+	edx++;
+	eax = *(0x402aa0 + 4 * rax);
+	ecx += eax;
+} while (0xf != eax);
+rsp + 0xc = 0xf; 
+if (0xf != edx)
+	explode
+if (ecx == rsp + 0x8)
+	return
+else
+	explode 
+
+if input
+ecx	edx	eax	
+0	0	5 <== compared to rsp+0xc (first input)
+0	1	12	
+12	2	3	
+15	3	7
+22	4	11
+33	5	13
+46	6	9
+55	7	4
+59	8	8
+67	9	0
+67	10	10
+77	11	1
+78	12	2
+80	13	14
+94	14	6
+100	15	15
+115 <== compared to rsp+0x8 (second input)

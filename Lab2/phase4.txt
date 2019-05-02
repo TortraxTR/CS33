@@ -13,34 +13,22 @@ else
 	explode
 
 func4************************
-eax = 14;
-eax = -14;
-ebx = -14;
-ebx = -14 >> 31;
-ebx = (-14 + (-14 >> 31)) >> 1; //65528
-ebx = esi + ebx; //65528
-if (ebx > edi)
-	edx = rbx - 1; 
-	func4();
-	eax = eax + ebx;
+eax = edx;		//14	6	6	4
+eax = eax - esi;	//14	6	2	0
+ebx = eax;		//14	6	2	0
+ebx = ebx >> 31; 	//0	0	0	0
+eax = eax + ebx; 	//14	6	2	0
+ebx = eax >> 1; 	//7	3	1	0
+ebx = esi + ebx; 	//7	3	5	4
+if (ebx > edi)		
+	edx = rbx - 1; 	//6		4	
+	func4();		
+	eax = eax + ebx;//19 <= final 	9
 	return;
 if (ebx < edi)
-	esi = rbx + 1;
+	esi = rbx + 1;	//	4
 	func4();
-	eax = eax + ebx;
+	eax = eax + ebx; 	12
 	return;
+eax = ebx;		//			4
 
-	
-edx	14	14	14	14	14	14	14	14	14	14	14
-eax	2	14	14	14	14	14	6	6	6	13	24 5+13-3=15
-ebx	1	14	0	14	7	14	7	11	11	24	24
-esi	0	0	0	0	0	8	8	8	12	12	12
-edi	13	13	13	13	13	13	13	13	13	13	13
-
-
-edx	14	12	
-eax	14	2
-ebx	7	13
-esi	8	12
-edi	12	12
-	
