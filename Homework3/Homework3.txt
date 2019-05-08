@@ -5,6 +5,7 @@ Esther Li
 CS33 Homework 3
 
 #5.19
+The floating point addition latency bound for my Intel i7 processor is 3.00, and the throughput bound is 1.00. 
 The following code is a version of prefix sum that uses a combination of 4-way loop unrolling and reassociation.
 void psum4x1a(float a[], float p[], long n) {
 	long i;
