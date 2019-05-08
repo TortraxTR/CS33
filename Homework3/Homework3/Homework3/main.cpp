@@ -33,7 +33,29 @@ void psum1a(float a[], float p[], long n) {
 	}
 }
 
-void psum3(float a[], float p[], long n) {
+void psum4x1a(float a[], float p[], long n) {
+	long i;
+	float last_val, val1, val2, val3, val4;
+	last_val = p[0] = a[0];
+	for (i = 1; i < n - 3; i += 4) {
+		val1 = last_val + a[i];
+		val2 = val1 + a[i + 1];
+		val3 = val2 + a[i + 2];
+		val4 = val3 + a[i + 3];
+		p[i] = val1;
+		p[i + 1] = val2;
+		p[i + 2] = val3;
+		p[i + 3] = val4;
+		last_val = last_val + (a[i] + a[i + 1] + a[i + 2] + a[i + 3]); //reassociation
+	}
+	/* finish remaining elements */
+	for (; i < n; i++) {
+		last_val += a[i];
+		p[i] = last_val;
+	}
+}
+
+void psum4(float a[], float p[], long n) {
 	long i;
 	float mid_val, temp1, temp2, temp3;
 	p[0] = a[0];
@@ -62,7 +84,11 @@ void psum3(float a[], float p[], long n) {
 
 int main() {
 	float a[5] = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-	float p[5];
+	float p[5] = { 0, 0, 0, 0, 0 };
+	psum4x1a(a, p, 5);
+	for (int i = 0; i < 5; i++)
+		cout << p[i] << endl;
+	cout << endl;
 	psum1(a, p, 5);
 	for (int i = 0; i < 5; i++)
 		cout << p[i] << endl;
@@ -70,8 +96,6 @@ int main() {
 	psum2(a, p, 5);
 	for (int i = 0; i < 5; i++)
 		cout << p[i] << endl;
-	cout << endl;
-	psum3(a, p, 5);
-	for (int i = 0; i < 5; i++)
-		cout << p[i] << endl;
+
+
 }
