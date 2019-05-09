@@ -1,3 +1,2 @@
 ﻿  main.cpp
   Homework3.vcxproj -> C:\Users\Esther\Desktop\CS_33\Homework3\Homework3\Debug\Homework3.exe
-c:\users\esther\desktop\cs_33\homework3\homework3\homework3\main.cpp(80): warning C6001: Using uninitialized memory 'mid_val'.
