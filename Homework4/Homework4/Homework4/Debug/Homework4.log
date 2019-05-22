@@ -1,0 +1,3 @@
+﻿  homework4.cpp
+c:\users\esther\desktop\cs_33\homework4\homework4\homework4\homework4.cpp(36): error C2660: 'transpose': function does not take 4 arguments
+  c:\users\esther\desktop\cs_33\homework4\homework4\homework4\homework4.cpp(10): note: see declaration of 'transpose'
