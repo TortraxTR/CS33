@@ -13,6 +13,9 @@ void transpose(int *dst, int *src, int dim) {
 					dst[m + k * dim] = src[k + m * dim];
 
 	for (; i < dim; i++)
-		for (j = 0; j < dim; j++)
-			dst[j * dim + i] = src[i * dim + j];
+		for (m = 0; m < dim; m++)
+			dst[m * dim + i] = src[i * dim + m];
+	for (; j < dim; i++)
+		for (k = 0; k < dim; k++)
+			dst[j * dim + k] = src[k * dim + j];
 }
