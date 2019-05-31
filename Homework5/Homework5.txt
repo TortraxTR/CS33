@@ -1,0 +1,9 @@
+Esther Li
+604892225 
+5/31/2019
+
+CS33 Homework 5
+
+1. The output of the MIPS code is: The value of i is: 7
+
+2. E. jyix will have the longest execution time for this loop because it has the least spatial locality as it does not take advantage of the row major order of array elements. 
