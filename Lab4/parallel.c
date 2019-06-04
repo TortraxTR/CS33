@@ -29,7 +29,8 @@ void work_it_par(long *old, long *new) {
     const long a = we_need_the_func();
     const long b = gimmie_the_func();
     
-#pragma omp parallel for firstprivate(old, new) private(i, j, k, compute_it, u) reduction\
+#pragma omp num_threads(16)
+#pragma omp parallel for shared(old, new) private(i, j, k, compute_it, u) reduction\
 (+:aggregate, sum, sum0, sum1, sum2, sum3, sum4, sum5, sum6, sum7, sum8, sum9)
     for (i = 1; i < DIM - 1; i++) {
         for (j = 1; j<DIM - 1; j++) {
@@ -64,8 +65,6 @@ void work_it_par(long *old, long *new) {
             }
         }
     }
-    printf("AGGR:%ld\n",aggregate);
-#pragma omp parallel num_threads(10)
     histogrammy[0] += sum0;
     histogrammy[1] += sum1;
     histogrammy[2] += sum2;
@@ -76,6 +75,7 @@ void work_it_par(long *old, long *new) {
     histogrammy[7] += sum7;
     histogrammy[8] += sum8;
     histogrammy[9] += sum9;
+    printf("AGGR:%ld\n",aggregate);
 }
 
 
