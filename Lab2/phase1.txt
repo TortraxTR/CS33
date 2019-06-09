@@ -1,0 +1,19 @@
+0000000000400ef3 <phase_1>:				
+  400ef3:	53                   	push   %rbx
+  400ef4:	48 89 fb             	mov    %rdi,%rbx		#rbx = 1st argument       
+  400ef7:	80 7f 01 00          	cmpb   $0x0,0x1(%rdi)		#rdi+0x1 - 0x0	
+  400efb:	75 07                	jne    400f04 <phase_1+0x11>	#explode if not equal
+  400efd:	80 3b 6e             	cmpb   $0x6e,(%rbx)		#rbx - 0x6e
+  400f00:	75 09                	jne    400f0b <phase_1+0x18>	#explode if not equal
+  400f02:	5b                   	pop    %rbx
+  400f03:	c3                   	retq   
+  400f04:	e8 5d 07 00 00       	callq  401666 <explode_bomb>
+  400f09:	eb f2                	jmp    400efd <phase_1+0xa>
+  400f0b:	e8 56 07 00 00       	callq  401666 <explode_bomb>
+  400f10:	eb f0                	jmp    400f02 <phase_1+0xf>
+
+rdi+0x1 = rdi + 1 byte = 0
+so 1st argument must only take up 1 byte of space --> it is a char
+0x6e corresponds to the char 'n'
+
+solution: n

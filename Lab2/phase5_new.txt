@@ -1,0 +1,59 @@
+Dump of assembler code for function phase_5:
+   0x00000000004010ab <+0>:	sub    $0x18,%rsp			#allocate 24 bytes of space on the stack
+   0x00000000004010af <+4>:	lea    0x8(%rsp),%rcx			#rcx = rsp+0x8
+   0x00000000004010b4 <+9>:	lea    0xc(%rsp),%rdx			#rdx = rsp+0xc
+   0x00000000004010b9 <+14>:	mov    $0x4031b1,%esi			#x/s 0x4031b1: "%d %d"
+   0x00000000004010be <+19>:	mov    $0x0,%eax			#eax = 0
+   0x00000000004010c3 <+24>:	callq  0x400c30 <__isoc99_sscanf@plt>
+   0x00000000004010c8 <+29>:	cmp    $0x1,%eax			#eax-0x1
+   0x00000000004010cb <+32>:	jle    0x401117 <phase_5+108>		#explode if eax <= 1 (1 or less arguments)
+   0x00000000004010cd <+34>:	mov    0xc(%rsp),%eax			#eax = rsp+0xc (1st argument)
+   0x00000000004010d1 <+38>:	and    $0xf,%eax			#eax = eax & 0xf (keep lower 15 bits of 1st arg)
+   0x00000000004010d4 <+41>:	mov    %eax,0xc(%rsp)			#rsp+0xc = eax 
+   0x00000000004010d8 <+45>:	cmp    $0xf,%eax			#eax - 0xf
+   0x00000000004010db <+48>:	je     0x40110d <phase_5+98>		#explode if eax == 0xf == 15
+   0x00000000004010dd <+50>:	mov    $0x0,%ecx			#ecx = 0
+   0x00000000004010e2 <+55>:	mov    $0x0,%edx			#edx = 0
+   
+loops through 15 times {
+   0x00000000004010e7 <+60>:	add    $0x1,%edx			#edx++
+   0x00000000004010ea <+63>:	cltq   					#sign extend eax to fill rax
+   0x00000000004010ec <+65>:	mov    0x402aa0(,%rax,4),%eax		#eax = mem[0x402aa0 + rax * 4]
+   0x00000000004010f3 <+72>:	add    %eax,%ecx			#ecx = ecx + eax
+   0x00000000004010f5 <+74>:	cmp    $0xf,%eax			
+   0x00000000004010f8 <+77>:	jne    0x4010e7 <phase_5+60>		#goto 0x4010e7 if eax != 0xf
+}
+   0x00000000004010fa <+79>:	movl   $0xf,0xc(%rsp)			#rsp+0xc = 0xf = 15
+   0x0000000000401102 <+87>:	cmp    $0xf,%edx			
+   0x0000000000401105 <+90>:	jne    0x40110d <phase_5+98>		#explode if edx != 0xf
+   0x0000000000401107 <+92>:	cmp    %ecx,0x8(%rsp)			
+   0x000000000040110b <+96>:	je     0x401112 <phase_5+103>		#don't explode if ecx = rsp+0x8 (2nd argument)
+   0x000000000040110d <+98>:	callq  0x401666 <explode_bomb>
+   0x0000000000401112 <+103>:	add    $0x18,%rsp
+   0x0000000000401116 <+107>:	retq   
+   0x0000000000401117 <+108>:	callq  0x401666 <explode_bomb>
+   0x000000000040111c <+113>:	jmp    0x4010cd <phase_5+34>
+
+%d %d: we need 2 integers 
+lower 15 bits of 1st argument != 15
+
+(gdb) x/100d 0x402aa0
+0x402aa0 <array.3420>:		10	0	0	0	2	0	0	0
+0x402aa8 <array.3420+8>:	14	0	0	0	7	0	0	0
+0x402ab0 <array.3420+16>:	8	0	0	0	12	0	0	0
+0x402ab8 <array.3420+24>:	15	0	0	0	11	0	0	0
+0x402ac0 <array.3420+32>:	0	0	0	0	4	0	0	0
+0x402ac8 <array.3420+40>:	1	0	0	0	13	0	0	0
+0x402ad0 <array.3420+48>:	3	0	0	0	9	0	0	0
+0x402ad8 <array.3420+56>:	6	0	0	0	5	0	0	0
+
+ 0                5                 10              15  
+{10, 2, 14, 7, 8, 12, 15, 11, 0, 4, 1, 13, 3, 9, 6, 5}
+
+2nd arg is being compare to the sum of all the values at mem[eax]
+
+we want the loop to execute 15 times and the final value of eax to be 15
+working backwards the value of eax will be (on each iteration of the loop): 
+15	6	14	2	1	10	0	8	4	9	13	11	7	3	12	5
+
+solution: 5 115

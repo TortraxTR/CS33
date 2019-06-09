@@ -1,0 +1,70 @@
+Dump of assembler code for function phase_2:
+=> 0x0000000000400f12 <+0>:	push   %r12
+   0x0000000000400f14 <+2>:	push   %rbp
+   0x0000000000400f15 <+3>:	push   %rbx
+   0x0000000000400f16 <+4>:	sub    $0x20,%rsp			#allocate 4 bytes of space on the stack 
+   0x0000000000400f1a <+8>:	mov    %rsp,%rsi			#rsi = rsp (stack pointer)
+   0x0000000000400f1d <+11>:	callq  0x401c11 <read_six_numbers>	
+   0x0000000000400f22 <+16>:	mov    (%rsp),%eax			#eax = *rsp (stack pointer)
+   0x0000000000400f25 <+19>:	or     0x4(%rsp),%eax			#eax = rsp + 0x4 OR rsp
+   0x0000000000400f29 <+23>:	je     0x400f34 <phase_2+34>		#jump if rsp OR rsp + 0x4 are 0 (1st and 2nd argument cannot be 0)
+   0x0000000000400f2b <+25>:	mov    %rsp,%rbx			#rbx = rsp (stack pointer)
+   0x0000000000400f2e <+28>:	lea    0x10(%rbx),%r12			#r12 = rbx + 0x10 (5th argument)
+   0x0000000000400f32 <+32>:	jmp    0x400f52 <phase_2+64>		#goto 0x400f52		
+  
+ 0x0000000000400f34 <+34>:	callq  0x401666 <explode_bomb>
+   0x0000000000400f39 <+39>:	jmp    0x400f2b <phase_2+25>
+   0x0000000000400f3b <+41>:	callq  0x401666 <explode_bomb>
+ 
+  0x0000000000400f40 <+46>:	mov    0x8(%rbp),%eax			#eax = rbp+0x8 (3rd argument)
+   0x0000000000400f43 <+49>:	mov    %eax,0x203853(%rip)        	#*(rip + 0x203853) = eax
+   0x0000000000400f49 <+55>:	add    $0x4,%rbx			#rbx = rbx + 0x4 (go to the second int on the stack)
+   0x0000000000400f4d <+59>:	cmp    %r12,%rbx			#compare second int on the stack to 5th argument 
+   0x0000000000400f50 <+62>:	je     0x400f61 <phase_2+79>		#if second int on stack == 5th argument, we done
+
+   0x0000000000400f52 <+64>:	mov    %rbx,%rbp			#rbp = rbx (stack pointer)
+   0x0000000000400f55 <+67>:	mov    0x4(%rbx),%eax			#eax = rbx + 0x4 (2nd argument)
+   0x0000000000400f58 <+70>:	add    (%rbx),%eax			#eax = eax + *rbx (1st argument + 2nd argument)
+   0x0000000000400f5a <+72>:	cmp    %eax,0x8(%rbx)			#rbx+0x8 - eax (3rd argument - (1st argument + 2nd argument))
+   0x0000000000400f5d <+75>:	je     0x400f40 <phase_2+46>		#if (3rd == (1st + 2nd)) goto 0x400f40
+  
+ 0x0000000000400f5f <+77>:	jmp    0x400f3b <phase_2+41>		#else explode
+   0x0000000000400f61 <+79>:	add    $0x20,%rsp
+   0x0000000000400f65 <+83>:	pop    %rbx
+   0x0000000000400f66 <+84>:	pop    %rbp
+   0x0000000000400f67 <+85>:	pop    %r12
+   0x0000000000400f69 <+87>:	retq 
+
+Dump of assembler code for function read_six_numbers:
+   0x0000000000401c11 <+0>:	sub    $0x8,%rsp			#allocate 8 bytes of space on the stack
+   0x0000000000401c15 <+4>:	mov    %rsi,%rdx			#rdx = rsi (stack pointer)
+   0x0000000000401c18 <+7>:	lea    0x4(%rsi),%rcx			#rcx = rsi + 0x4 (1 int away)
+   0x0000000000401c1c <+11>:	lea    0x14(%rsi),%rax			#rax = rsi + 0x14 (5 ints away)
+   0x0000000000401c20 <+15>:	push   %rax				#stack now has the 6th int
+   0x0000000000401c21 <+16>:	lea    0x10(%rsi),%rax			#rax = rsi + 0x10 (4 ints away)
+   0x0000000000401c25 <+20>:	push   %rax				#stack now has the 5th int
+   0x0000000000401c26 <+21>:	lea    0xc(%rsi),%r9			#r9 = rsi + 0xc (3 ints away)
+   0x0000000000401c2a <+25>:	lea    0x8(%rsi),%r8			#r8 = rsi + 0x8 (2 ints away)
+   0x0000000000401c2e <+29>:	mov    $0x4031a5,%esi			
+   0x0000000000401c33 <+34>:	mov    $0x0,%eax			#eax = 0x0
+   0x0000000000401c38 <+39>:	callq  0x400c30 <__isoc99_sscanf@plt>
+   0x0000000000401c3d <+44>:	add    $0x10,%rsp			#free up 16 bytes of stack space
+   0x0000000000401c41 <+48>:	cmp    $0x5,%eax			#eax - 0x5
+   0x0000000000401c44 <+51>:	jle    0x401c4b <read_six_numbers+58>	#explode if eax < 5
+   0x0000000000401c46 <+53>:	add    $0x8,%rsp			#free up 8 bytes of stack space
+   0x0000000000401c4a <+57>:	retq   
+   0x0000000000401c4b <+58>:	callq  0x401666 <explode_bomb>
+
+we want:
+
+1st argument != 0
+2nd argument != 0
+		   (rbx)       (rbx+0x4)
+3rd argument = 1st argument + 2nd argument
+4th argument = 2nd argument + 3rd argument
+5th argument = 3rd argument + 4th argument
+6th argument = 4th argument + 5th argument 
+
+loop stops when rbx+0x4 is equal to the 5th argument 
+
+solution: 1 1 2 3 5 8 (any 6 consecutive fibonacci numbers)

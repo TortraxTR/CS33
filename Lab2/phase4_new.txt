@@ -1,0 +1,98 @@
+Dump of assembler code for function phase_4:
+   0x0000000000401054 <+0>:	sub    $0x18,%rsp			#allocate 24 bytes of space on stack
+   0x0000000000401058 <+4>:	lea    0x8(%rsp),%rcx			#rcx = rsp+0x8 (2nd argument)
+   0x000000000040105d <+9>:	lea    0xc(%rsp),%rdx			#rdx = rsp+0xc (1st argument)
+   0x0000000000401062 <+14>:	mov    $0x4031b1,%esi			#x/s 0x4031b1 = "%d %d" so our arguments are 2 integers
+   0x0000000000401067 <+19>:	mov    $0x0,%eax			#eax = 0
+   0x000000000040106c <+24>:	callq  0x400c30 <__isoc99_sscanf@plt>
+   0x0000000000401071 <+29>:	cmp    $0x2,%eax			#eax - 2
+   0x0000000000401074 <+32>:	jne    0x40107d <phase_4+41>		#explode if eax != 2
+   0x0000000000401076 <+34>:	cmpl   $0xe,0xc(%rsp)			#rsp+0xc - 0xe
+   0x000000000040107b <+39>:	jbe    0x401082 <phase_4+46>		#don't explode if rsp+0xc (1st argument) <= 14
+   0x000000000040107d <+41>:	callq  0x401666 <explode_bomb>
+   0x0000000000401082 <+46>:	mov    $0xe,%edx			#edx = 0xe = 14
+   0x0000000000401087 <+51>:	mov    $0x0,%esi			#esi = 0
+   0x000000000040108c <+56>:	mov    0xc(%rsp),%edi			#edi = rsp+0xc (1st argument)
+   0x0000000000401090 <+60>:	callq  0x401022 <func4>			#
+   0x0000000000401095 <+65>:	cmp    $0x13,%eax			#eax - 0x13 = eax - 19
+   0x0000000000401098 <+68>:	jne    0x4010a1 <phase_4+77>		#explode if eax != 19
+   0x000000000040109a <+70>:	cmpl   $0x13,0x8(%rsp)			#rsp+0x8 - 0x13 = rsp+0x8 - 19
+   0x000000000040109f <+75>:	je     0x4010a6 <phase_4+82>		#done if rsp+0x8 = 19 (2nd argument = 19)
+   0x00000000004010a1 <+77>:	callq  0x401666 <explode_bomb>		
+   0x00000000004010a6 <+82>:	add    $0x18,%rsp
+   0x00000000004010aa <+86>:	retq 
+
+
+Dump of assembler code for function func4:
+   0x0000000000401022 <+0>:	push   %rbx
+   0x0000000000401023 <+1>:	mov    %edx,%eax			#eax = edx = 14
+   0x0000000000401025 <+3>:	sub    %esi,%eax			#eax = eax - esi = 14 - 0 = 14
+   0x0000000000401027 <+5>:	mov    %eax,%ebx			#ebx = eax = 14
+   0x0000000000401029 <+7>:	shr    $0x1f,%ebx			#ebx = ebx >> 31 = 0
+   0x000000000040102c <+10>:	add    %eax,%ebx			#ebx = ebx + eax = 0 + 14 = 14
+   0x000000000040102e <+12>:	sar    %ebx				#ebx = ebx >> 1 = 14/2 = 7
+   0x0000000000401030 <+14>:	add    %esi,%ebx			#ebx = ebx + esi = 7 + 0 = 7
+   0x0000000000401032 <+16>:	cmp    %edi,%ebx			#ebx - edi = 7 - 1st arg
+   0x0000000000401034 <+18>:	jg     0x40103c <func4+26>		#if(ebx > 1st arg) goto 0x40103c
+   0x0000000000401036 <+20>:	jl     0x401048 <func4+38>		
+   0x0000000000401038 <+22>:	mov    %ebx,%eax			#we want 2nd arg == ebx == 19
+   0x000000000040103a <+24>:	pop    %rbx
+   0x000000000040103b <+25>:	retq   
+   0x000000000040103c <+26>:	lea    -0x1(%rbx),%edx			#edx = rbx-1 = 7 - 2nd arg - 1
+   0x000000000040103f <+29>:	callq  0x401022 <func4>
+   0x0000000000401044 <+34>:	add    %eax,%ebx
+   0x0000000000401046 <+36>:	jmp    0x401038 <func4+22>
+   0x0000000000401048 <+38>:	lea    0x1(%rbx),%esi
+   0x000000000040104b <+41>:	callq  0x401022 <func4>
+   0x0000000000401050 <+46>:	add    %eax,%ebx
+   0x0000000000401052 <+48>:	jmp    0x401038 <func4+22>
+
+
+1st argument <= 14
+2nd argument == 19
+
+correct input for esi: 4
+eax = edx;			14	6	6	4
+eax = eax - esi;		14	6	2	0
+ebx = eax;			14	6	2	0
+ebx = ebx >> 31; 		0	0	0	0
+eax = eax + ebx; 		14	6	2	0
+ebx = eax >> 1; 		7	3	1	0
+ebx = esi + ebx; 		7	3	5	4
+if (ebx > edi)		
+	edx = rbx - 1; 		6		4	
+	func4();		
+	ebx = ebx + eax;	7+12=19		5+4=9
+	eax = ebx;		19		9
+	return;
+if (ebx < edi)
+	esi = rbx + 1;			4
+	func4();
+	ebx = ebx + eax; 		3+9=12
+	eax = ebx;			12		4
+	return;
+
+
+example of wrong input for esi: 6
+eax = edx;			14	6	6	6	
+eax = eax - esi;		14	6	2	0	
+ebx = eax;			14	6	2	0	
+ebx = ebx >> 31; 		0	0	0	0	
+eax = eax + ebx; 		14	6	2	0	
+ebx = eax >> 1; 		7	3	1	0	
+ebx = esi + ebx; 		7	3	5	6	
+if (ebx > edi)		
+	edx = rbx - 1; 		6			
+	func4();		
+	ebx = ebx + eax;	7+14=21		
+	eax = ebx;		21	
+	return;
+if (ebx < edi)
+	esi = rbx + 1;			4	6	
+	func4();
+	ebx = ebx + eax; 		3+11=14	5+6=11
+	eax = ebx;			14	11	
+	return;
+eax = ebx;						6						
+
+
